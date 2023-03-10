@@ -114,7 +114,7 @@ defmodule EmpleadossPhoenix.Supervisores do
     Repo.all(query)
   end
 
-  def by_name(nombre) do
+  def find_by_name(nombre) do
     from(s in Supervisor, where: s.nombres == ^nombre)
     |> Repo.all()
   end
