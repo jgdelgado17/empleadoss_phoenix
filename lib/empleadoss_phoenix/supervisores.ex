@@ -114,10 +114,8 @@ defmodule EmpleadossPhoenix.Supervisores do
     Repo.all(query)
   end
 
-  def by_name(nombre),
-    do:
-      Repo.get_by!(Supervisor, nombres: nombre)
-      |> Repo.preload(:jefesucursal)
-      |> Repo.preload(:cajero)
-
+  def by_name(nombre) do
+    from(s in Supervisor, where: s.nombres == ^nombre)
+    |> Repo.all()
+  end
 end

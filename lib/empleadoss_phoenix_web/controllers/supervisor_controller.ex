@@ -49,6 +49,6 @@ defmodule EmpleadossPhoenixWeb.SupervisorController do
 
   def pornombre(conn, %{"nombre" => nombre}) do
     supervisor = Supervisores.by_name(nombre)
-    render(conn, :show, supervisor: supervisor)
+    render(conn, :index, supervisor: supervisor)
   end
 end
