@@ -117,5 +117,7 @@ defmodule EmpleadossPhoenix.Supervisores do
   def find_by_name(nombre) do
     from(s in Supervisor, where: s.nombres == ^nombre)
     |> Repo.all()
+    |> Repo.preload(:jefesucursal)
+    |> Repo.preload(:cajero)
   end
 end
