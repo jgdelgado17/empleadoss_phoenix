@@ -21,37 +21,6 @@ defmodule EmpleadossPhoenix.Supervisores do
     Repo.all(Supervisor) |> Repo.preload(:jefesucursal) |> Repo.preload(:cajero)
   end
 
-  def super_conmas_cajeros do
-    query =
-      from s in Supervisor,
-        join: c in assoc(s, :cajero),
-        group_by: s.id,
-        # select: {s.id, s.nombres, s.apellidos, count(c.id)},
-        # select: %{[s.id, s.nombres, s.apellidos] | cajero: count(c.id)},
-        select: %{supervisor: [s.id, s.nombres, s.apellidos], cajeros_count: count(c.id)},
-        # order_by: [desc: :cajeros_count],
-        limit: 1
-
-    # supervisor_conmas_cajeros = Enum.max_by(query, & &1.cajeros_count)
-    # id = supervisor_conmas_cajeros.supervisor.id
-    # get_supervisor!(id)
-
-    Repo.all(query) |> Repo.preload([:jefesucursal, :cajero])
-  end
-
-  def by_name(nombre) do
-      Repo.get_by!(Supervisor, nombres: nombre)
-      |> Repo.preload(:jefesucursal)
-      |> Repo.preload(:cajero)
-
-    # query =
-    #   from c in EmpleadossPhoenix.Cajeros.Cajero,
-    #     where: c.supervisor_id == ^supervisor.id,
-    #     select: c
-
-    # Repo.all(query) |> Repo.preload(:jefesucursal) |> Repo.preload(:cajero)
-  end
-
   @doc """
   Gets a single supervisor.
 
@@ -133,4 +102,22 @@ defmodule EmpleadossPhoenix.Supervisores do
   def change_supervisor(%Supervisor{} = supervisor, attrs \\ %{}) do
     Supervisor.changeset(supervisor, attrs)
   end
+
+  def super_conmas_cajeros do
+    query =
+      from s in Supervisor,
+        join: c in assoc(s, :cajero),
+        group_by: s.id,
+        select: %{supervisor: s, cajeros_count: count(c.id)},
+        limit: 1
+
+    Repo.all(query)
+  end
+
+  def by_name(nombre),
+    do:
+      Repo.get_by!(Supervisor, nombres: nombre)
+      |> Repo.preload(:jefesucursal)
+      |> Repo.preload(:cajero)
+
 end

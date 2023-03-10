@@ -11,16 +11,6 @@ defmodule EmpleadossPhoenixWeb.SupervisorController do
     render(conn, :index, supervisor: supervisor)
   end
 
-  def mascajeros(conn, _params) do
-    supervisor = Supervisores.super_conmas_cajeros()
-    render(conn, :index, supervisor: supervisor)
-  end
-
-  def pornombre(conn, %{"nombre" => nombre}) do
-    supervisor = Supervisores.by_name(nombre)
-    render(conn, :show, supervisor: supervisor)
-  end
-
   def create(conn, %{"supervisor" => supervisor_params}) do
     with {:ok, %Supervisor{} = supervisor} <- Supervisores.create_supervisor(supervisor_params) do
       conn
@@ -38,7 +28,8 @@ defmodule EmpleadossPhoenixWeb.SupervisorController do
   def update(conn, %{"id" => id, "supervisor" => supervisor_params}) do
     supervisor = Supervisores.get_supervisor!(id)
 
-    with {:ok, %Supervisor{} = supervisor} <- Supervisores.update_supervisor(supervisor, supervisor_params) do
+    with {:ok, %Supervisor{} = supervisor} <-
+           Supervisores.update_supervisor(supervisor, supervisor_params) do
       render(conn, :show, supervisor: supervisor)
     end
   end
@@ -49,5 +40,15 @@ defmodule EmpleadossPhoenixWeb.SupervisorController do
     with {:ok, %Supervisor{}} <- Supervisores.delete_supervisor(supervisor) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def mascajeros(conn, _params) do
+    supervisor = Supervisores.super_conmas_cajeros()
+    render(conn, :mascajeros, supervisor: supervisor)
+  end
+
+  def pornombre(conn, %{"nombre" => nombre}) do
+    supervisor = Supervisores.by_name(nombre)
+    render(conn, :show, supervisor: supervisor)
   end
 end

@@ -8,6 +8,12 @@ defmodule EmpleadossPhoenixWeb.SupervisorJSON do
     %{data: for(supervisor <- supervisor, do: data(supervisor))}
   end
 
+  def mascajeros(%{supervisor: supervisor}) do
+    supervisor = Enum.at(supervisor, 0)
+    supervisor = Map.get(supervisor, :supervisor)
+    %{data: data(supervisor)}
+  end
+
   @doc """
   Renders a single supervisor.
   """
@@ -16,9 +22,6 @@ defmodule EmpleadossPhoenixWeb.SupervisorJSON do
   end
 
   defp data(%Supervisor{} = supervisor) do
-
-    supervisor = Map.from_struct(supervisor)
-
     IO.puts("\n*********************************************\n")
     IO.inspect(supervisor)
     IO.puts("\n*********************************************\n")
@@ -53,7 +56,7 @@ defmodule EmpleadossPhoenixWeb.SupervisorJSON do
           |> Enum.map(&Map.from_struct(&1))
           |> Enum.map(
             &Enum.reduce(
-              [:__meta__, :supervisor, :count, :inserted_at, :update_at],
+              [:__meta__, :supervisor, :inserted_at, :update_at],
               &1,
               fn key, acc ->
                 Map.delete(acc, key)
